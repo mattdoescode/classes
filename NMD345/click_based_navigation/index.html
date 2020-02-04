@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="An example of click-based content navigation via div tags" />
+	<!-- This demo of click-based content navigation using <div>s -->
+	<!-- is designed to acquaint beginning Web designers with styles and JavaScript. -->
+	<!-- This is version 1.5 by Jon Ippolito, which was modified to adjust -->
+	<!-- function syntax and simplify code using getElementsByTagName. -->
+	<!-- The page requires JavaScript enabled and a standards-compliant browser. -->
+	<!-- If you're comparing this to the rollover-based navigation demo, the code is -->
+	<!-- identical except in the JavaScript functions defined within the <script> tags -->
+	<!-- and called from the navbar links. -->
+	<title>
+		Navigating Web Content Using Divs and Mouse-Clicks
+	</title>
+
+	<!-- <meta http-equiv="refresh" content="5" /> -->
+
+
+	<!-- Following is a stylesheet for this page. -->
+	<!-- You can use it to modify the positions, colors, -->
+	<!-- and fonts of all <div>s on the page. -->
+	<style type="text/css">
+		/*
+	The following style definition applies to the entire page.
+	There are many ways to specify Web colors, but %s of
+	red, green, blue are the most intuitive.
+	*/
+
+		body {
+			background-image: url(./assets/Dog-Wallpaper.jpg);
+			background-repeat: repeat-y;
+			background-size: 100%;
+			color: rgb(80%, 100%, 100%);
+			font-family: verdana;
+		}
+
+		/*
+	The following two style definitions force link
+	underlines only on rollover.
+	*/
+
+		a {
+			text-decoration: none;
+			color: rgb(80%, 0%, 100%);
+			font-weight: bold;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		/*
+	The following style definition sets margins for paragraphs.
+	*/
+
+		p {
+			margin-top: 0px;
+			color: rgb(30%, 50%, 90%)
+		}
+
+		/*
+	The following sets off words or phrases for emphasis.
+	You can redefine standard tags (as below)
+	or you can apply emphasis with span tags or in any HTML tag
+	using the "class=" formula (not shown).
+	*/
+
+		em {
+			color: rgb(49, 184, 44);
+		}
+
+		/*
+	The following style definitions specify absolute positions
+	as well as font characteristics; they are meant to apply only
+	to "div" tags. The # sign indicates these are user-defined ids.
+	The first corresponds to the "div" containing an image
+	that persists on every screen, such as a logo:
+	Use pixels ("px") to specify the size of a font absolutely, or
+	"em"s in a way that scales with different browser settings.
+	*/
+
+		#logo {
+			position: absolute;
+			top: 50px;
+			left: 30px;
+			width: 500px;
+		}
+
+		/*
+	The second corresponds to text that persists
+	on every screen, in this case on the right of the image:
+*/
+
+		#page-title {
+			position: absolute;
+			top: 75px;
+			left: 610px;
+			width: 200px;
+			font-size: 12px;
+		}
+
+		/*
+	The third corresponds to a list of links,
+	in this case a left-hand navigation menu.
+	Any font characteristics you specify here
+	may be overridden by the link specs under "a" above.
+	*/
+
+		#navigation-menu {
+			position: absolute;
+			top: 230px;
+			left: 70px;
+			font-size: 18px;
+		}
+
+		/*
+		The following sets a special margin for list (<ul>) and
+		list item (<li>) tags within the navigation menu context.
+		*/
+
+		#navigation-menu ul {
+			padding-left: 40px;
+			/* This makes Internet Explorer happier */
+			list-style: none;
+		}
+
+		#navigation-menu ul,
+		#navigation-menu li {
+			margin-top: 5px;
+			margin-bottom: 0;
+			margin-left: -12px;
+		}
+
+		/*
+		The following sets a different margin for headings
+		within the navigation menu context.
+		*/
+
+		#navigation-menu h4 {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+
+		/*
+			The following style definition sets a special margin for
+			anchor tags within the navigation menu context.
+			*/
+
+		#navigation-menu a {
+			margin-left: 20px;
+		}
+
+		/*
+	The fourth corresponds to the descriptive text or image
+	that is hidden or shown upon clicking on the links. Its style
+	definition begins with a period (.) to indicate this class will be
+	used multiple times. Note that the default display is none (hidden).
+	*/
+
+		.description {
+			position: absolute;
+			top: 270px;
+			left: 350px;
+			width: 360px;
+			font-size: 16px;
+			display: none;
+		}
+
+		.smaller_image {
+			height: 300px;
+			width: 300px;
+		}
+
+		h4 {
+			color: rgb(80%, 0%, 0%);
+		}
+	</style>
+	<!-- Next comes a simple JavaScript to show or hide <div>s. -->
+	<!-- These functions work only with contemporary browsers -->
+	<!-- and are meant to be used with click-based navigation. -->
+	<script type="text/javascript">
+		/*
+		The following function automatically adds to an array all the <div>s
+		containing descriptive text or images you want to navigate through.
+		It assumes you have given these <div>s a class of "description".
+		Note this array holds references to the actual <div>s, not to their ids.
+		Note also that it must be called from the <body> tag to make sure
+		the browser has already loaded all <div>s.
+		*/
+		registerDescriptionDivs = function () {
+			// FYI, getElementsByClassName doesn't work in Internet Explorer 8 and earlier.
+			descriptionDivs = document.getElementsByClassName("description ");
+		}
+		/*
+		This function shows the content "div" you picked and hides the others.
+		idVariable is the id of the "div" you want to show or hide.
+		*/
+		showOnlyThisId = function (idVariable) {
+			// First hide all the <div>s with the page's content, thus resetting the initial condition.
+			for (var divCounter = 0; divCounter < descriptionDivs.length; divCounter++) {
+				descriptionDivs[divCounter].style.display = "none";
+			}
+			// Then show only the "div" that was just selected.
+			document.getElementById(idVariable).style.display = "block";
+		}
+
+
+	</script>
+</head>
+<!-- The following ensures all the divs will be loaded when registerDescriptionDivs fires. -->
+
+<body onload="registerDescriptionDivs()">
+	<!-- Here's where you put the <div>s themselves. -->
+	<!-- First let's put a persistent "logo"; you can put text in here too.  -->
+	<div id="logo">
+		<img src="./assets/text_dog.jpg" alt="Page logo" title="Page logo" width="500" height="140" />
+	</div>
+	<!-- Now let's add a text block that will always be there. -->
+	<!-- Use "&lt;" and "&gt;" for < and > when you don't want the browser -->
+	<!-- to interpret them as actual HTML tags. -->
+	<div id="page-title">
+		<p>This is a demo of &lt;div&gt;-based navigation using mouse
+			<em>clicks</em>.</p>
+		<p>Text in this &lt;div&gt; could be a title, slogan, or other explanatory text that stays on each screen.</p>
+	</div>
+	<!-- Next the navigation bar:  -->
+	<div id="navigation-menu">
+		<!-- Note that the ids passed in the "showOnlyThisId" function  -->
+		<!-- must be the same  as the <div>s they correspond to below. -->
+		<!-- "return false" keeps the page from jittering when you click on them. -->
+		<h2>on click items</h2>
+		<h4>About</h4>
+		<ul>
+			<li>
+				<a href="#" onclick="showOnlyThisId('description-of-mission'); return false">mission</a>
+			</li>
+			<li>
+				<a href="#" onclick="showOnlyThisId('description-of-contact'); return false">contact</a>
+			</li>
+		</ul>
+		<h4>Different Dog Sizes</h4>
+		<ul>
+			<li>
+				<a href="#" onclick="showOnlyThisId('description-of-apples'); return false">Small Dogs</a>
+			</li>
+			<li>
+				<a href="#" onclick="showOnlyThisId('description-of-bananas'); return false">Medium Dogs</a>
+			</li>
+			<li>
+				<a href="#" onclick="showOnlyThisId('description-of-cherries'); return false">Large Dogs</a>
+			</li>
+		</ul>
+		<h2>On mouseover</h2>
+		<h4>Differnt types</h4>
+		<ul>
+			<li>
+				<a href="#" onmouseover="showOnlyThisId('description-of-oranges'); return false">Hairy Dogs</a>
+			</li>
+			<li>
+				<a href="#" onmousemove="showOnlyThisId('description-of-plums'); return false">Not so hairy dogs</a>
+			</li>
+		</ul>
+	</div>
+	<!-- Next the <div>s with the content you want to show when you click on the links. -->
+	<!-- Note that the id is always the one referred to in the link "a" tags above. -->
+	<div id="description-of-mission" class="description">
+		<p>
+			<em>Dogs are absolutely precious and sould be taken care of.</em>
+		</p>
+		<p>Dogs are important. You can never have too many.</p>
+	</div>
+	<div id="description-of-contact" class="description">
+		<p>
+			<em>Need help with your dog?</em>
+		</p>
+		<p>Need food?
+			<a href="mailto:spam-bait@bad-idea.net">Contact us!</a>
+		</p>
+	</div>
+	<div id="description-of-apples" class="description">
+		<p>
+			<em>Put content related to your third heading here, and so forth.</em>
+		</p>
+		<p>
+			<em>Small Dogs</em> keep the doctor away.
+			<a href="http://example.com">Click here to eat some apples.</a>
+		</p>
+		<p>
+			<img class="smaller_image" src="./assets/small.jpg" </p>
+	</div>
+	<div id="description-of-bananas" class="description">
+		<p>Get some
+			<em>Bananas</em> and eat em.
+			<a href="http://example.com">Click here to try some delicious bananas.</a>
+		</p>
+		<p>
+			<img class="smaller_image" src="./assets/medium.jpg" </p>
+	</div>
+	<div id="description-of-cherries" class="description">
+		<p>
+			<em>Cherries</em> are yummy produce.
+			<a href="http://example.com"> Click here to buy lots of fruits.</a>
+		</p>
+		<p>
+			<img class="smaller_image" src="./assets/large.PNG" </p>
+	</div>
+	<div id="description-of-oranges" class="description">
+		<p>
+			<em>Oranges</em> would make an excellent subject for a new media project.
+			<a href="http://example.com"> Click here to consume oranges.</a>
+			<img class="smaller_image" src="./assets/hairy.jpg" </p>
+		</p>
+	</div>
+	<div id="description-of-plums" class="description">
+		<p>You can never have enough
+			<em> Plums</em>, an amazing fruit.</p>
+		<p>
+			<a href="http://example.com">Click here to chow down on some plums.</a>
+		</p>
+		<img class="smaller_image" src="./assets/naked.jpg" </p>
+	</div>
+</body>
+
+</html>

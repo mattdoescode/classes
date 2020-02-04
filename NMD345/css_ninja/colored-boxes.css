@@ -1,0 +1,117 @@
+* {
+  margin:0px;
+  padding:0px;
+  border:0px;
+}
+html{
+  background: linear-gradient(hsla(178, 80%, 76%, 1),hsla(170, 50%, 45%, 1));
+  background-repeat: no-repeat;
+  height:100%
+}
+
+body {
+
+}
+
+#logo{
+  height:200px;
+  background-image: url(top.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+#watermark{
+  /* float:right;
+  height:200px;
+  width: 200px;
+  margin-top: 200px;
+  margin-left: 500px;
+  position: absolute;
+  background-color: red; */
+}
+
+#main-container{
+  max-width: 1000px;
+  min-width: 600px;
+  min-height: 100%;
+  margin:auto;
+  padding:10px;
+  background-color: hsla(170, 15%, 5%, .2);
+}
+.global-navigation{
+  /*border:1px dashed blue;*/
+  padding:20px;
+  display: grid;
+  grid-template-columns: 33% 33% 33%; /* place 3 nav elements with equal space */
+  grid-column-gap: 10px;
+}
+
+.navigation-link{
+         /* Center the 3 nav links */
+  text-align: center;
+  text-decoration: underline;
+  color: hsla(150, 40%, 50%, 1)
+}
+
+#nav-menu-1, #nav-menu-2, #nav-menu-3{
+  transition: all 1s ease-in-out;
+  min-height: 30px;
+  background-color: hsla(167, 25%, 35%, 1);
+  font-size: 20px;
+  border-radius: 4px;
+}
+
+#nav-menu-1:hover,#nav-menu-2:hover,#nav-menu-3:hover {
+  background-color: hsla(170, 25%, 25%, 1);
+  font-size:30px;
+  color:white;
+  text-align: center;
+}
+
+#nav-menu-1{
+}
+#nav-menu-2{
+}
+#nav-menu-3{
+}
+
+em{
+  font-weight: bold;
+  color: hsla(155, 63%, 59%, 1);
+  font-size: 18px;
+}
+
+p{
+  margin:10px;
+  font-family: sans-serif;
+}
+
+a{
+  text-decoration: none;
+  color:rgb(80%, 10%, 15%);
+  font-size:18px;
+}
+
+#description-container, #other-projects{
+  background-color: hsla(167, 25%, 35%, 1);
+  padding:5px;
+  margin:5px;
+  border-radius: 5px;
+}
+#description-container{
+}
+
+#other-projects{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* place 3 nav elements with equal space */
+  grid-column-gap: 10px;
+  text-align: center;
+}
+
+.other-project{
+  margin:10px;
+  background-size: 40px;
+  background-image:url(shuriken.png);
+  background-repeat: no-repeat;
+}

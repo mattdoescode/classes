@@ -1,0 +1,88 @@
+<!--
+    Moving code thanks to http://jsfiddle.net/Xw29r/
+
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Div mania 1</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+
+<style>
+    .panel {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background-color: red;
+    }
+
+
+    div.a {
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        position: fixed;
+
+    }
+</style>
+
+
+<script>
+
+    window.onload = function start() {
+
+        window.setInterval(function () {
+            new DivObject();
+        }, 1500);
+    }
+
+
+    DivObject = function () {
+        this.div = document.createElement("div");
+        document.body.appendChild(this.div);
+        this.div.className = "panel";
+        this.div.style.top = parseInt(Math.random() * window.innerHeight) + "px";
+        this.div.style.left = parseInt(Math.random() * window.innerWidth) + "px";
+        this.div.className = 'a';
+    }
+
+
+    $(document).ready(function () {
+        animateDiv();
+
+    });
+
+    function makeNewPosition() {
+
+        // Get viewport dimensions (remove the dimension of the div)
+        var h = $(window).height() - 50;
+        var w = $(window).width() - 50;
+
+        var nh = Math.floor(Math.random() * h);
+        var nw = Math.floor(Math.random() * w);
+
+        return [nh, nw];
+
+    }
+
+    function animateDiv() {
+        var newq = makeNewPosition();
+        $('.a').animate({ top: newq[0], left: newq[1] }, function () {
+            animateDiv();
+        });
+
+    };
+
+
+</script>
+
+
+<body>
+    <p onclick="new DivObject();" class="a">Click me to make a new object</p>
+</body>
+
+</html>

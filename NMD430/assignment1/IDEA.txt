@@ -1,0 +1,33 @@
+People on a grid fight for survival
+
+
+Interact directly -> 
+	drop food or water
+	light fires
+
+
+Born: you drop into the enivorment 
+Live: survive
+Die: death / found
+
+
+interact directly with the enviroment
+	food, water, fire
+
+properties
+	health
+	age
+	clean
+	hunger
+	thirst
+	SLEEP
+
+states:
+	sleep
+	hunger
+	water
+	bath
+	fight
+	flee
+	
+

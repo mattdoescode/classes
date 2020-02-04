@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <style>
+        body {
+            background-color: orange;
+        }
+
+        li {
+            position: relative;
+            float: left;
+            list-style: none;
+            margin: .5em;
+            background-color: green;
+            padding: .5em;
+            border-radius: .3em;
+        }
+
+        ul ul {
+            position: absolute;
+            height: 0em;
+            background-color: red;
+            padding: 0 .3em;
+            margin: .9em 0 0 -1em;
+            transition: height .75s ease-in;
+            overflow: hidden;
+        }
+
+        li:hover ul {
+            height: 9em;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="menubar">
+        <ul>
+            <li>Option 1
+                <ul>
+                    <li>option 1.1</li>
+                    <li>option 1.2</li>
+                </ul>
+            </li>
+            <li>Option 2
+                <ul>
+                    <li>option 2.1</li>
+                    <li>option 2.2</li>
+                </ul>
+            </li>
+            <li>Option 3
+                <ul>
+                    <li>Option 3.1</li>
+                    <li>option 3.2</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>

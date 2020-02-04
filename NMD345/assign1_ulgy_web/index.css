@@ -1,0 +1,53 @@
+body {
+  background-color: #998427;
+}
+
+.ulgy_text {
+  color: red;
+  font-variant: small-caps;
+  font-family: "Times New Roman", Times, serif;
+  margin: -14px -20px 50px 20px;
+}
+
+button {
+  border-left-color: red;
+  border-right-color: blue;
+  border-bottom-color: black;
+  border-top-color: green;
+  border-radius: 30px;
+  border-width: thick;
+  box-shadow: 20px -10px 30px #732462;
+}
+
+img{
+  opacity: 0.7;
+  filter: grayscale(20%);
+}
+
+#ulgy_div{
+  background-color:white;
+  border-radius: 40px;
+  border-top-style: dotted;
+}
+
+#ulgy_p_1{
+  font-family: courier;
+  color:orange;
+  margin-left: -20px;
+  margin-top: -30px;
+}
+#ulgy_p_2{
+  font-family: arial;
+  color:pink;
+  margin: -14px;
+}
+#ulgy_p_3{
+  font-family: georgia;
+  height:50px;
+  width:100px;
+  color:green;
+}
+#ulgy_p_4{
+  color: blue;
+  margin-top: -40px;
+}
