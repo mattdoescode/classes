@@ -5,8 +5,6 @@
  * Description: Game like creature control, where critters need to get what they require for life and run from what
  * hurts them. You play god and can change the world around them and control one of them
  *
- * Summary of project: I would say that this project was little too much to chew when I decided on it. 
- * that being said I am happy with how it turned out.
  *
  */
  

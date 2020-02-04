@@ -61,7 +61,7 @@ class Player {
     playerProps.set("age", (int)random(10, 70)); 
     playerProps.set("hunger", (int)random(400, 800)); 
     playerProps.set("thirst", (int)random(500, 999)); 
-    playerProps.set("fatigue", (int)random(400, 999));
+    playerProps.set("fatigue", (int)random(0, 300));
   }
 
   //show the player
