@@ -7,38 +7,38 @@
  *
  *
  */
+
+/**
+ How requirements are me
  
- /**
-   How requirements are me
-   
-   Interact directly
-     my controlling one of the characters 
-   Interact indirectly 
-     change environment
-     set fires
-   Live, Born, Die
-     Born by hitting new character button
-     live while running around the map
-     die when they are out of health
-   properties
-     Health
-     Food
-     Water
-     Fatigue
-     Age
-     Name
-   States
-    PLAYERCONTROLMANUAL, 
-    FOOD, 
-    WOOD, 
-    WATER, 
-    RUN, 
-    REST, 
-    DONE
-   Responds to its environmnet
-    yes it does
-   is the “companion” persistent
-    yes it is
+ Interact directly
+ my controlling one of the characters 
+ Interact indirectly 
+ change environment
+ set fires
+ Live, Born, Die
+ Born by hitting new character button
+ live while running around the map
+ die when they are out of health
+ properties
+ Health
+ Food
+ Water
+ Fatigue
+ Age
+ Name
+ States
+ PLAYERCONTROLMANUAL, 
+ FOOD, 
+ WOOD, 
+ WATER, 
+ RUN, 
+ REST, 
+ DONE
+ Responds to its environmnet
+ yes it does
+ is the “companion” persistent
+ yes it is
  **/
 
 
@@ -130,7 +130,7 @@ void draw() {
       terrain.getPiece((int)random(0, 15), (int)random(0, 15)).setState();
     }
   }
-  
+
   //we spread fires here
   if (onFire) {
     //do something with timing here if time
@@ -200,6 +200,12 @@ String bottomMenu() {
     if (mouseClicked == true) {
       option = "changeTerrain";
     }
+  } else if (mouseX > 300 + 3 && mouseX < 400 + 3 && mouseY > 750) {
+    hover = "resetTerrain";
+    if (mouseClicked == true) {
+      terrain = new Terrain();
+      option = "resetTerrain";
+    }
   }
 
   //why does ternary opperator not work here?
@@ -225,6 +231,13 @@ String bottomMenu() {
   fill(0);
   text("Change", 210 + 2, 800);
   text("Terrain", 210 + 2, 840);
+
+  if (hover == "resetTerrain") fill(250); 
+  else fill(100);
+  rect(300+3, 750, 100, 200);
+  fill(0);
+  text("Reset", 310 + 2, 800);
+  text("Terrain", 310 + 2, 840);
 
   //return what was clicked on. if nothing was clicked return that as well.
   return option;
