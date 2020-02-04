@@ -61,7 +61,7 @@ class Player {
     playerProps.set("age", (int)random(10, 70)); 
     playerProps.set("hunger", (int)random(400, 800)); 
     playerProps.set("thirst", (int)random(500, 999)); 
-    playerProps.set("fatigue", (int)random(0, 300));
+    playerProps.set("energy", (int)random(0, 300));
   }
 
   //show the player
@@ -109,7 +109,7 @@ class Player {
        searchFood(type);
        return;
       }
-      if (playerProps.get("fatigue") <= 200 && state == State.DONE ) {
+      if (playerProps.get("energy") <= 200 && state == State.DONE ) {
         state = State.REST;
       }else if (state == State.REST){
        searchRest(type);
@@ -120,7 +120,7 @@ class Player {
 
   void searchRest(String type) {
     if(type != "wood") run();
-    if(playerProps.get("fatigue") > 900){
+    if(playerProps.get("energy") > 900){
       state = State.DONE;
     }
   }
@@ -162,7 +162,7 @@ class Player {
     //void does nothing 
     //food tile -> adds hunger
     //water tile -> adds thirst 
-    //wood time -> add fatigue
+    //wood time -> add energy
 
     //damage tracking to the player
     int damage = 0;
@@ -175,31 +175,31 @@ class Player {
         playerProps.set("thirst", playerProps.get("thirst")+15);
         if (playerProps.get("thirst") >= 1000) playerProps.set("thirst", 1000);
         playerProps.set("hunger", playerProps.get("hunger")-4);
-        playerProps.set("fatigue", playerProps.get("fatigue")-4);
+        playerProps.set("energy", playerProps.get("energy")-4);
         toReturn = true;
         break;
       case "food":
         playerProps.set("hunger", playerProps.get("hunger")+15);
         if (playerProps.get("hunger") >= 1000) playerProps.set("hunger", 1000);
         playerProps.set("thirst", playerProps.get("thirst")-4);
-        playerProps.set("fatigue", playerProps.get("fatigue")-4);
+        playerProps.set("energy", playerProps.get("energy")-4);
         toReturn = true;
         break;
       case "wood":
-        playerProps.set("fatigue", playerProps.get("fatigue")+15);
-        if (playerProps.get("fatigue") >= 1000) playerProps.set("fatigue", 1000);
+        playerProps.set("energy", playerProps.get("energy")+15);
+        if (playerProps.get("energy") >= 1000) playerProps.set("energy", 1000);
         playerProps.set("hunger", playerProps.get("hunger")-3);
-        playerProps.set("fatigue", playerProps.get("fatigue")-3);
+        playerProps.set("energy", playerProps.get("energy")-3);
         toReturn = true;
         break;
       case "void":
-        playerProps.set("fatigue", playerProps.get("fatigue")-(int)(random(4, 10)));
+        playerProps.set("energy", playerProps.get("energy")-(int)(random(4, 10)));
         playerProps.set("hunger", playerProps.get("hunger")-(int)(random(4, 10)));
         playerProps.set("thirst", playerProps.get("thirst")-(int)(random(4, 10)));
         damage+=2;
         break;
       case "fire":
-        playerProps.set("fatigue", playerProps.get("fatigue")-(int)(random(4, 5)));
+        playerProps.set("energy", playerProps.get("energy")-(int)(random(4, 5)));
         playerProps.set("hunger", playerProps.get("hunger")-(int)(random(4, 5)));
         playerProps.set("thirst", playerProps.get("thirst")-(int)(random(6, 12)));
         damage+=15;
@@ -209,8 +209,8 @@ class Player {
     }
 
     //see how much damage player takes
-    if (playerProps.get("fatigue") <= 0) {
-      playerProps.set("fatigue", 0);
+    if (playerProps.get("energy") <= 0) {
+      playerProps.set("energy", 0);
       damage+=2;
     }
     if (playerProps.get("hunger") <= 0) {
@@ -283,7 +283,7 @@ class Player {
     rect(840, (id*150) + 25, 150, 18);
     text("Water", 751, (id*150) + 60);
     rect(840, (id*150) + 45, 150, 18);
-    text("Fatigue", 751, (id*150) + 80);
+    text("Energy", 751, (id*150) + 80);
     rect(840, (id*150) + 65, 150, 18);
     text("Age", 751, (id*150) + 100);
     text(playerName, 751, (id*150) + 140);
@@ -293,7 +293,7 @@ class Player {
     rect(840, (id*150) + 5, map(playerProps.get("health"), 0, 1000, 0, 150), 18);
     rect(840, (id*150) + 25, map(playerProps.get("hunger"), 0, 1000, 0, 150), 18);
     rect(840, (id*150) + 45, map(playerProps.get("thirst"), 0, 1000, 0, 150), 18);
-    rect(840, (id*150) + 65, map(playerProps.get("fatigue"), 0, 1000, 0, 150), 18);
+    rect(840, (id*150) + 65, map(playerProps.get("energy"), 0, 1000, 0, 150), 18);
     text(playerProps.get("age"), 840, (id*150) + 100);
   }
 }
