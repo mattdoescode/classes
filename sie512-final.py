@@ -1,11 +1,8 @@
-# Perlin noise to generate terrain
-
 # soil moisture levels
 
 # number of nodes
 
 # users add or remove nodes
-
 
 # pauseable program
 
@@ -29,9 +26,11 @@ import time
 
 tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 1000, 1000
+CONSTmapSize = 500, 500
 
+#color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
+#values of said points before color conversion
 themap = numpy.zeros((CONSTmapSize[0], CONSTmapSize[1]))
 
 #convert from 1 number range to another
@@ -76,15 +75,15 @@ def computeHeights():
     elem = 0
     for x in range(CONSTmapSize[0]):
         for y in range(CONSTmapSize[0]):
-            if themap[x][y] <= 55:
+            if themap[x][y] <= waterLevel:
                 color = water
-            elif themap[x][y] <= 70:
+            elif themap[x][y] <= 100:
                 color = sand
             elif themap[x][y] <= 140:
                 color = lightGrass
             elif themap[x][y] <= 200:
                 color = heavyGrass
-            elif themap[x][y] <= 220:
+            elif themap[x][y] <= 235:
                 color = rock
             else:
                 color = snow
@@ -93,6 +92,7 @@ def computeHeights():
             elem = elem + 1
     print("Computed Height Map")
 
+waterLevel = 180
 computeHeights()
 
 def screenshot():
@@ -135,10 +135,21 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 paused = not paused
+            if event.key == pygame.K_m:
+                #CHECK LOGIC HERE
+                step = 20
+                if waterLevel <= step:
+                  waterLevel = 0
+                  changedTerrain = True
+                else:
+                    waterLevel = waterLevel - step
+                    changedTerrain = True
+                print(waterLevel)
 
     if(not paused):
         if changedTerrain:
             showRaw()
+            computeHeights()
             newScreenCap = screenshot()
             loadImage(newScreenCap)
             # toShow = loadImage(newScreenCap)
