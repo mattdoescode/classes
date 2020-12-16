@@ -36,14 +36,6 @@ class Node():
             pygame.draw.circle(screen, (0, 0, 0), [self.location[0], self.location[1]], 5, 255)
             pygame.draw.circle(screen, self.color, [self.location[0], self.location[1]], self.range, 2)
 
-    def checkNeighbors(self, otherNodes):
-        
-        #check distance from "self" to all other nodes
-        for node in otherNodes:
-            dist = math.sqrt(((node.location[0] - self.location[0])**2) + ((node.location[0] - self.location[0])**2))
-            if dist < self.range:
-                print("print something is in range")
-
 class Network():
     # do this later
     def __init__():
