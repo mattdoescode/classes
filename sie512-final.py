@@ -37,7 +37,7 @@ nodes = []
 
 tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 300, 300
+CONSTmapSize = 400, 400
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -161,16 +161,21 @@ green = (0,255,0)
 red = (255,0,0)
 def checkNodes():
 
-    print("checking message communication")
+    #print("checking node neighbors")
 
     for node in nodes:
         node.colorChange(red)
     
     counter = 0
     for node in range(len(nodes[:-1])): 
-        dist = math.sqrt(((nodes[counter].location[0] - nodes[counter+1].location[0])**2) + ((nodes[counter+1].location[0] - nodes[counter].location[0])**2))
+        dist = math.sqrt(((nodes[counter+1].location[0] - nodes[counter].location[0])**2) + ((nodes[counter+1].location[1] - nodes[counter].location[1])**2))
+
+        #math.sqrt(((nodes[counter].location[0] - nodes[counter+1].location[0])**2) + ((nodes[counter+1].location[0] - nodes[counter].location[0])**2))
         
-        if(dist <= nodes[counter].range):
+        print("distance is: ", dist)
+        print(nodes[counter].range)
+
+        if(dist <= (nodes[counter].range)):
             print('found something')
             nodes[counter].colorChange(green)
             nodes[counter+1].colorChange(green)
@@ -199,6 +204,8 @@ while running:
                 toggle = not toggle        
             if event.key == pygame.K_u:
                 checkNodes()
+            if event.key == pygame.K_d:
+                nodes = []
 
     if(not paused):
         if changedTerrain:
