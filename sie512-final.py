@@ -27,6 +27,7 @@ from opensimplex import OpenSimplex
 import numpy
 import pygame
 import time
+import math
 
 #code to run the nodes
 import Node
@@ -36,7 +37,7 @@ nodes = []
 
 tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 600, 600
+CONSTmapSize = 300, 300
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -155,6 +156,27 @@ newScreenCap = ""
 waterLevel = 100
 toggle = True
 
+
+green = (0,255,0)
+red = (255,0,0)
+def checkNodes():
+
+    print("checking message communication")
+
+    for node in nodes:
+        node.colorChange(red)
+    
+    counter = 0
+    for node in range(len(nodes[:-1])): 
+        dist = math.sqrt(((nodes[counter].location[0] - nodes[counter+1].location[0])**2) + ((nodes[counter+1].location[0] - nodes[counter].location[0])**2))
+        
+        if(dist <= nodes[counter].range):
+            print('found something')
+            nodes[counter].colorChange(green)
+            nodes[counter+1].colorChange(green)
+        
+        counter = counter + 1
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -175,6 +197,9 @@ while running:
                 makeNode("EndNode")
             if event.key == pygame.K_t:
                 toggle = not toggle        
+            if event.key == pygame.K_u:
+                checkNodes()
+
     if(not paused):
         if changedTerrain:
             computeHeights()
