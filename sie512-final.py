@@ -1,98 +1,125 @@
-# Perlin noise to generate terrain 
+# Perlin noise to generate terrain
 
-# soil moisture levels 
+# soil moisture levels
 
-# number of nodes 
+# number of nodes
 
 # users add or remove nodes
 
 
-# pauseable program 
+# pauseable program
 
 # The algorithms I’d like to simulate would be pathfinding (energy saving, shortest path),
 # neighborhood management (density of nodes vs memory), auto assigning node role and node
 # time syncing (nodes send data at staggering determined times, allowing the router to go sleep).
 # I will gladly add or remove any at your discretion.
 
-#Visual of map / with nodes + coordinates 
-# plot showing current soil moisture levels 
-#state / attribue of each node with 
-# Object node 
-# range, battery life, sleep settings, role, detected neighbors 
+# Visual of map / with nodes + coordinates
+# plot showing current soil moisture levels
+# state / attribue of each node with
+# Object node
 
 # add and remove nodes
 
 from opensimplex import OpenSimplex
+# https://pypi.org/project/opensimplex/
 import numpy
 import pygame
+import time
 
-tmp = OpenSimplex(seed = 0)
+tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 1000,1000
+CONSTmapSize = 200, 200
+
+heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 themap = numpy.zeros((CONSTmapSize[0], CONSTmapSize[1]))
 
+#convert from 1 number range to another
 def convert_range(min, max, newMin, newMax, oldValue):
     oldRange = max - min
     newRange = newMax - newMin
     newValue = (((oldValue - min) * newRange) / oldRange) + newMin
     return newValue
 
+#create terrain
+print("Generating terrain.")
 for x in range(CONSTmapSize[0]):
     for y in range(CONSTmapSize[0]):
-        nx = x/CONSTmapSize[0] - 0.5 
+        nx = x/CONSTmapSize[0] - 0.5
         ny = y/CONSTmapSize[1] - 0.5
 
-        #zoom in or out
+        # zoom in or out
         frequency = 4
 
         nx = nx * frequency
         ny = ny * frequency
 
-        #add detail "octaves"
-        themap[x][y] = convert_range(0,2,0,255, 1 * tmp.noise2d(1 * nx, 1 * ny) + 0.5 * tmp.noise2d(2 * nx, 2 * ny) + 0.25 * tmp.noise2d(6 * nx, 6 * ny) + 1)
+        # add detail "octaves"
+        themap[x][y] = convert_range(0, 2, 0, 255, 1 * tmp.noise2d(1 * nx, 1 * ny) +
+                                     0.5 * tmp.noise2d(2 * nx, 2 * ny) + 0.25 * tmp.noise2d(6 * nx, 6 * ny) + 1)
 
-        #print(themap[x][y])
+        # print(themap[x][y])
+
+print("Terrain Created")
+
+# colors
+water = (0, 0, 255)
+sand = (210, 180, 140)
+lightGrass = (112, 130, 56)
+heavyGrass = (11, 102, 35)
+rock = (139, 137, 137)
+snow = (255, 250, 255)
+
+#what pixel to what color
+def computeHeights():
+    print("Starting to compute Terrain")
+    elem = 0
+    for x in range(CONSTmapSize[0]):
+        for y in range(CONSTmapSize[0]):
+            if themap[x][y] <= 55:
+                color = water
+            elif themap[x][y] <= 70:
+                color = sand
+            elif themap[x][y] <= 140:
+                color = lightGrass
+            elif themap[x][y] <= 200:
+                color = heavyGrass
+            elif themap[x][y] <= 220:
+                color = rock
+            else:
+                color = snow
+            
+            heights[elem] = color
+            elem = elem + 1
+    print("Computed Height Map")
+
+computeHeights()
 
 pygame.init()
-
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
 
 running = True
 paused = False
+changedTerrain = False
+clock = pygame.time.Clock()
 
-
-#display everything 
-#keep state and track
 while running:
-    while not paused:
-        # Did the user click the window close button?
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                paused = not paused
 
-        # Fill the background with white
+    if(not paused):
+        print("drawing display")
+        #display terrain
+        elem = 0
         for x in range(CONSTmapSize[0]):
-            for y in range(CONSTmapSize[0]):
-                color = 0
-
-                if themap[x][y] <= 50:
-                    color = (0,0,255)
-                elif themap[x][y] <= 70:
-                    color = (210,180,140)
-                elif themap[x][y] <= 140:
-                    color = (112, 130, 56)
-                elif themap[x][y] <= 200:
-                    color = (11, 102, 35)
-                elif themap[x][y] <= 220:
-                    color = (139, 137, 137)
-                else:
-                  color = (255, 250, 255)
-                
-                
-                screen.set_at((x, y), (color))
-
-        # Flip the display
+            for y in range(CONSTmapSize[0]):    
+                screen.set_at((x, y), (heights[elem]))
+                elem = elem + 1
         pygame.display.flip()
 
-# Done! Time to quit.
-pygame.quit()
+    clock.tick(1)
