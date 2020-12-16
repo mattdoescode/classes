@@ -133,6 +133,9 @@ def showRaw():
 def loadImage(name):
     screen.blit(pygame.image.load(name),(0,0))
 
+def makeNode(name):
+    nodes.append(Node.Node(name, pygame.mouse.get_pos()))
+
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
 font = pygame.font.SysFont(None, 64)
@@ -165,11 +168,11 @@ while running:
             if event.key == pygame.K_k:
                 changeWaterLevel(20)
             if event.key == pygame.K_c:
-                nodes.append(Node.Node("coordinator", pygame.mouse.get_pos()))
+                makeNode("coordinator")
             if event.key == pygame.K_r:
-                nodes.append(Node.Node("router", pygame.mouse.get_pos()))
+                makeNode("router")
             if event.key == pygame.K_e:
-                nodes.append(Node.Node("end node", pygame.mouse.get_pos())) 
+                makeNode("EndNode")
             if event.key == pygame.K_t:
                 toggle = not toggle        
     if(not paused):
