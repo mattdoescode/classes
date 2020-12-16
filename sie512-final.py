@@ -29,7 +29,7 @@ import time
 
 tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 200, 200
+CONSTmapSize = 100, 100
 
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 themap = numpy.zeros((CONSTmapSize[0], CONSTmapSize[1]))
@@ -95,6 +95,14 @@ def computeHeights():
 
 computeHeights()
 
+def screenshot():
+    time_taken = time.asctime(time.localtime(time.time()))
+    time_taken = time_taken.replace(" ", "_")
+    time_taken = time_taken.replace(":", "-")
+    save_file = "screenshots/" + time_taken + ".png"
+    pygame.image.save(screen, save_file)
+    print("screen saved")
+
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
 
@@ -111,9 +119,11 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 paused = not paused
+            if event.key == pygame.K_o:
+                screenshot()
 
     if(not paused):
-        print("drawing display")
+        #print("drawing display")
         #display terrain
         elem = 0
         for x in range(CONSTmapSize[0]):
@@ -122,4 +132,4 @@ while running:
                 elem = elem + 1
         pygame.display.flip()
 
-    clock.tick(1)
+    clock.tick(30)
