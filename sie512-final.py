@@ -182,6 +182,9 @@ def checkNodes():
         
         counter = counter + 1
 
+print("Controls are as follow: ")
+#add in control instructions
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
