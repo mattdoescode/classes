@@ -29,7 +29,7 @@ import time
 
 tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 100, 100
+CONSTmapSize = 1000, 1000
 
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 themap = numpy.zeros((CONSTmapSize[0], CONSTmapSize[1]))
@@ -102,14 +102,30 @@ def screenshot():
     save_file = "screenshots/" + time_taken + ".png"
     pygame.image.save(screen, save_file)
     print("screen saved")
+    return save_file
+
+def showRaw():
+    elem = 0
+    for x in range(CONSTmapSize[0]):
+        for y in range(CONSTmapSize[0]):    
+            screen.set_at((x, y), (heights[elem]))
+            elem = elem + 1
+
+def loadImage(name):
+    screen.blit(pygame.image.load(name),(0,0))
+    
+
+def showScreenCap(name):
+    print(type(toshow))
 
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
 
 running = True
 paused = False
-changedTerrain = False
+changedTerrain = True
 clock = pygame.time.Clock()
+newScreenCap = ""
 
 while running:
     for event in pygame.event.get():
@@ -119,17 +135,18 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 paused = not paused
-            if event.key == pygame.K_o:
-                screenshot()
 
     if(not paused):
-        #print("drawing display")
-        #display terrain
-        elem = 0
-        for x in range(CONSTmapSize[0]):
-            for y in range(CONSTmapSize[0]):    
-                screen.set_at((x, y), (heights[elem]))
-                elem = elem + 1
+        if changedTerrain:
+            showRaw()
+            newScreenCap = screenshot()
+            loadImage(newScreenCap)
+            # toShow = loadImage(newScreenCap)
+            # showScreenCap(toShow)
+            changedTerrain = False
+        else:
+            loadImage(newScreenCap)
+
         pygame.display.flip()
 
     clock.tick(30)
