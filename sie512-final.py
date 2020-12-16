@@ -18,6 +18,10 @@
 
 # add and remove nodes
 
+print("\n")
+print("Visual Sensor Network - With Interactive Terrain")
+print("Matthew Loewen 12/17/2020 \n")
+
 from opensimplex import OpenSimplex
 # https://pypi.org/project/opensimplex/
 import numpy
@@ -26,8 +30,7 @@ import time
 
 tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 500, 500
-
+CONSTmapSize = 200, 200
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -69,6 +72,20 @@ heavyGrass = (11, 102, 35)
 rock = (139, 137, 137)
 snow = (255, 250, 255)
 
+def changeWaterLevel(changeAmt):
+
+    #WHY THE HECK DO THESE HAVE TO BE GLOBAL VARIABLES?!
+
+    global waterLevel
+    waterLevel = waterLevel + changeAmt
+    if waterLevel < 0:
+        waterLevel = 0
+    elif waterLevel > 255:
+        waterLevel = 255
+    global changedTerrain
+    changedTerrain = True
+    print("Water Level is now: ", waterLevel)
+
 #what pixel to what color
 def computeHeights():
     print("Starting to compute Terrain")
@@ -91,8 +108,6 @@ def computeHeights():
             heights[elem] = color
             elem = elem + 1
     print("Computed heights")
-
-waterLevel = 180
 
 def screenshot():
     time_taken = time.asctime(time.localtime(time.time()))
@@ -121,6 +136,8 @@ paused = False
 changedTerrain = True
 clock = pygame.time.Clock()
 newScreenCap = ""
+# Starting water level
+waterLevel = 200
 
 while running:
     for event in pygame.event.get():
@@ -132,14 +149,10 @@ while running:
                 paused = not paused
             if event.key == pygame.K_m:
                 #CHECK LOGIC HERE
-                step = 20
-                if waterLevel <= step:
-                  waterLevel = 0
-                  changedTerrain = True
-                else:
-                    waterLevel = waterLevel - step
-                    changedTerrain = True
-                print(waterLevel)
+                changeWaterLevel(-20)
+            if event.key == pygame.K_k:
+                #CHECK LOGIC HERE
+                changeWaterLevel(20)
 
     if(not paused):
         if changedTerrain:
