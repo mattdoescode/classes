@@ -28,9 +28,15 @@ import numpy
 import pygame
 import time
 
+#code to run the nodes
+import Node
+
+#collection of our nodes
+nodes = []
+
 tmp = OpenSimplex(seed=5847)
 
-CONSTmapSize = 200, 200
+CONSTmapSize = 600, 600
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -75,7 +81,6 @@ snow = (255, 250, 255)
 def changeWaterLevel(changeAmt):
 
     #WHY THE HECK DO THESE HAVE TO BE GLOBAL VARIABLES?!
-
     global waterLevel
     waterLevel = waterLevel + changeAmt
     if waterLevel < 0:
@@ -130,14 +135,22 @@ def loadImage(name):
 
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
+font = pygame.font.SysFont(None, 64)
 
 running = True
 paused = False
+
+#does the hight map need to be calculated
 changedTerrain = True
+
+#clock for FPS
 clock = pygame.time.Clock()
+
+#location of last saved screenshot
 newScreenCap = ""
 # Starting water level
-waterLevel = 200
+waterLevel = 100
+toggle = True
 
 while running:
     for event in pygame.event.get():
@@ -148,22 +161,28 @@ while running:
             if event.key == pygame.K_p:
                 paused = not paused
             if event.key == pygame.K_m:
-                #CHECK LOGIC HERE
                 changeWaterLevel(-20)
             if event.key == pygame.K_k:
-                #CHECK LOGIC HERE
                 changeWaterLevel(20)
-
+            if event.key == pygame.K_c:
+                nodes.append(Node.Node("coordinator", pygame.mouse.get_pos()))
+            if event.key == pygame.K_r:
+                nodes.append(Node.Node("router", pygame.mouse.get_pos()))
+            if event.key == pygame.K_e:
+                nodes.append(Node.Node("end node", pygame.mouse.get_pos())) 
+            if event.key == pygame.K_t:
+                toggle = not toggle        
     if(not paused):
         if changedTerrain:
             computeHeights()
             showRaw()
             newScreenCap = screenshot()
-            loadImage(newScreenCap)
+            #loadImage(newScreenCap)
             changedTerrain = False
         else:
             loadImage(newScreenCap)
-
+            for node in nodes:
+                node.show(screen, font, toggle)
         pygame.display.flip()
 
     clock.tick(30)
