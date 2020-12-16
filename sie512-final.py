@@ -48,7 +48,7 @@ for x in range(CONSTmapSize[0]):
         ny = y/CONSTmapSize[1] - 0.5
 
         # zoom in or out
-        frequency = 4
+        frequency = 6
 
         nx = nx * frequency
         ny = ny * frequency
@@ -90,10 +90,9 @@ def computeHeights():
             
             heights[elem] = color
             elem = elem + 1
-    print("Computed Height Map")
+    print("Computed heights")
 
 waterLevel = 180
-computeHeights()
 
 def screenshot():
     time_taken = time.asctime(time.localtime(time.time()))
@@ -113,10 +112,6 @@ def showRaw():
 
 def loadImage(name):
     screen.blit(pygame.image.load(name),(0,0))
-    
-
-def showScreenCap(name):
-    print(type(toshow))
 
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
@@ -148,12 +143,10 @@ while running:
 
     if(not paused):
         if changedTerrain:
-            showRaw()
             computeHeights()
+            showRaw()
             newScreenCap = screenshot()
             loadImage(newScreenCap)
-            # toShow = loadImage(newScreenCap)
-            # showScreenCap(toShow)
             changedTerrain = False
         else:
             loadImage(newScreenCap)
