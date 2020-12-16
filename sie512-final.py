@@ -26,9 +26,9 @@ from opensimplex import OpenSimplex
 import numpy
 import pygame
 
-tmp = OpenSimplex()
+tmp = OpenSimplex(seed = 0)
 
-CONSTmapSize = 600,600
+CONSTmapSize = 1000,1000
 themap = numpy.zeros((CONSTmapSize[0], CONSTmapSize[1]))
 
 def convert_range(min, max, newMin, newMax, oldValue):
@@ -42,14 +42,15 @@ for x in range(CONSTmapSize[0]):
         nx = x/CONSTmapSize[0] - 0.5 
         ny = y/CONSTmapSize[1] - 0.5
 
-        frequency = 5
+        #zoom in or out
+        frequency = 4
 
         nx = nx * frequency
         ny = ny * frequency
-        
-        finalout = tmp.noise2d(nx,ny)
 
-        themap[x][y] = convert_range(0,2,0,255, tmp.noise2d(nx,ny) + 1)
+        #add detail "octaves"
+        themap[x][y] = convert_range(0,2,0,255, 1 * tmp.noise2d(1 * nx, 1 * ny) + 0.5 * tmp.noise2d(2 * nx, 2 * ny) + 0.25 * tmp.noise2d(6 * nx, 6 * ny) + 1)
+
         #print(themap[x][y])
 
 pygame.init()
@@ -72,7 +73,23 @@ while running:
         # Fill the background with white
         for x in range(CONSTmapSize[0]):
             for y in range(CONSTmapSize[0]):
-                screen.set_at((x, y), (themap[x][y],themap[x][y],themap[x][y]))
+                color = 0
+
+                if themap[x][y] <= 50:
+                    color = (0,0,255)
+                elif themap[x][y] <= 70:
+                    color = (210,180,140)
+                elif themap[x][y] <= 140:
+                    color = (112, 130, 56)
+                elif themap[x][y] <= 200:
+                    color = (11, 102, 35)
+                elif themap[x][y] <= 220:
+                    color = (139, 137, 137)
+                else:
+                  color = (255, 250, 255)
+                
+                
+                screen.set_at((x, y), (color))
 
         # Flip the display
         pygame.display.flip()
