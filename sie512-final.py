@@ -161,26 +161,23 @@ green = (0,255,0)
 red = (255,0,0)
 def checkNodes():
 
-    #print("checking node neighbors")
+    print("checking radio ranges")
 
     for node in nodes:
         node.colorChange(red)
     
     counter = 0
-    for node in range(len(nodes[:-1])): 
-        dist = math.sqrt(((nodes[counter+1].location[0] - nodes[counter].location[0])**2) + ((nodes[counter+1].location[1] - nodes[counter].location[1])**2))
-
-        #math.sqrt(((nodes[counter].location[0] - nodes[counter+1].location[0])**2) + ((nodes[counter+1].location[0] - nodes[counter].location[0])**2))
-        
-        print("distance is: ", dist)
-        print(nodes[counter].range)
-
-        if(dist <= (nodes[counter].range)):
-            print('found something')
-            nodes[counter].colorChange(green)
-            nodes[counter+1].colorChange(green)
-        
+    for nodeouter in range(len(nodes[:-1])): 
         counter = counter + 1
+        for nodeinner in range((len(nodes) - counter)):
+            
+            dist = math.sqrt(((nodes[nodeinner + counter].location[0] - nodes[nodeouter].location[0])**2) + ((nodes[nodeinner + counter].location[1] - nodes[nodeouter].location[1])**2))
+
+            #this SHOULD work with different range nodes
+            if(dist <= (nodes[nodeouter].range)):
+                nodes[nodeouter].colorChange(green)
+            if(dist <= (nodes[nodeinner + counter].range)):
+                nodes[nodeinner + counter].colorChange(green)
 
 print("Controls are as follow: ")
 #add in control instructions

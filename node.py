@@ -1,6 +1,6 @@
 import pygame
 import math
-
+import random
 class Node():
 
     BLACK = ( 0, 0, 0)
@@ -18,6 +18,7 @@ class Node():
         # batteryLife = 100
         # sleepSettings = 0
         self.role = name
+        self.id = random.randrange(0,100)
         # neightbors = 0
         # connected = False
         print("making new:", self.role)
@@ -29,7 +30,7 @@ class Node():
         #TO DO: Range = to height of sensor on map
         size = self.range
             
-        img = font.render(self.role[0], True, self.color)
+        img = font.render(str(self.id), True, self.color)
         screen.blit(img, (self.location[0]-10, self.location[1]-25))
         
         if toggle:
