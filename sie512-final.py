@@ -135,11 +135,15 @@ def loadImage(name):
     screen.blit(pygame.image.load(name),(0,0))
 
 
-idCount = 1 
+idCount = 0
 def makeNode(name):
     global idCount
     idCount = idCount + 1
     nodes.append(Node.Node(name, pygame.mouse.get_pos(), idCount))
+
+def deleteNode():
+    toDelete = len(nodes)
+    nodes.pop(toDelete-1)
 
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
@@ -212,6 +216,9 @@ while running:
                 checkNodes()
             if event.key == pygame.K_d:
                 nodes = []
+            #delete nodes by ID
+            if event.key == pygame.K_a:
+                deleteNode()
 
     if(not paused):
         if changedTerrain:
