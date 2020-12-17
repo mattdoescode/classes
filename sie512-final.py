@@ -203,70 +203,115 @@ def drawTouching(surface):
 #make a list of neighbor nodes
 def callNeighbors():
     for node in nodes:
+        #print("computing node", node.id)
         node.collection = []
+        node.payload = []
         for inner in nodes:
             if node.id == inner.id:
                 continue
             dist = math.sqrt(((node.location[0] - inner.location[0])**2) + ((node.location[1] - inner.location[1])**2))
-            print(dist)
+            #print(dist)
             if dist <= node.range: 
-                #print("1 neighbor added")
+                #print("neighbor added:", inner.id)
                 node.collection.append(inner)
 
 
+# COMMUNICATION 
+#Works with 3 pieces of information
+    # NODE ID
+    # boolean - is water detected
+    # message livespan - a message can be tranmitted from a node to a node 5 times
 
+def clearPayload():
+    for node in nodes:
+        node.payload = []
+
+message_strength = 5
 def report(node):
+    
     print("reporting for node:", node.id)
 
-#def report():
+    # End node sending to router
+    if node.role[0] == "E":
 
+        clearPayload()
 
+        for connection in node.collection:
+            if connection.role[0] == "R":
+                print("end node", node.id, "sending to router", connection.id)
+                if node.dectedColor == (255,0,0):
+                    connection.payload.append([node.id,True,message_strength-1])
+                elif node.dectedColor == (0,255,0):
+                    connection.payload.append([node.id,False,message_strength-1])
+                report(connection)
 
-    # print("currently analyzing node: ", node.id)
-    # #print(type(node))
+    # router sending to router
+    # router sending to coord    
+    if node.role[0] == "R":
+        for connection in node.collection:
+            if connection.role[0] == "R":
+                for message in node.payload:
+                    #print("copying from router: ", node.id, "to router:", connection.id)
+                    message[2] = message[2] - 1
+                    #print(message[2])
+                    if message[2] <= 0: 
+                        print("dead message")
+                    else: 
+                        connection.payload.append(message)
+                        report(connection)
 
-    # if node.id in inspectedID:
-    #     return
-    # else:
-    #     inspectedID.append(node.id)
+            elif connection.role[0] == "C":
+                data = node.payload[0]
+                data[2] = data[2] - 1
+                print("Coord has recieved message", data[0], data[1], data[2])
+                appendToCSV(data)
 
-    # for touched in node.isTounching:
-    #     print(node.id, "is touching: ", touched.id)
+    ###
+        #### THIS IMPLEMENTATION DOES NOT WORK. IGNORE... FOR NOW....
+    ###
+    # # in case of end node to router
+    # if node.role[0] == "E":
+    #     for neighbor in node.collection:
+    #         if neighbor.role[0] == "R":
+    #             print("reporting connection from end note to router")
+    #             if node.dectedColor == (255,0,0):
+    #                 neighbor.payload.append([node.id,True])
+    #             elif node.dectedColor == (0,255,0):
+    #                 neighbor.payload.append([node.id,False])
+    #         for info in neighbor.payload:
+    #             print("printing router info: " )
+    #             print(info[0], info[1])
 
-    #     print("looking at connection to", touched.id)
-    #     # print(touched.role[0])
-    #     # print(touched.role)
-    #     # print(type(touched.role))
+    # #in case of router to router
+    # if node.role[0] == "R":
+    #     for neighbor in node.collection:
+    #         if neighbor.role[0] == "R":
+    #             print("reporting connection from router to router")
 
-    #     if touched.role[0] == "E":
-    #         print("reached end node - returning")
-            
-    #     elif touched.role[0] == "R":
-    #         print("connection to router")
-    #         report(touched)
+    #             #we want to share information from router to neighbor
+    #             for info in node.payload:
+    #                 print("copying over 1 record")
+    #                 neighbor.payload.append(info)
 
-    #     elif touched.role[0] == "C":
-    #         print("connection back to Coord - stopping")
-    #         continue
-    # print(len(node.isTounching))
+    #             #WE ALSO want to share from neighbor to router
+    #             for info in neighbor.payload:
+    #                 print("copting over 1 record")
+    #                 node.payload.append(info)
 
-    # for touched in node.isTounching:
-    #     print(node.id, "is touching: ", touched.id)
-    #     print(touched.role)
-    #     if touched.role[0] == "E":
-    #         print("Reached end node: ", touched.id)
+    # # in case of router to coordinator
+    # if node.role[0] == "R":
+    #     for neighbor in node.collection: 
+    #         if neighbor.role[0] == "C":
+    #             print("reporting connection from router to coordinator")
+    #             for info in node.payload:
+    #                 print("copying record over")
+    #                 neighbor.payload.append(info)
 
-    # for touched in node.isTounching:
-    #     if touched.role[0] == "C":
-    #         print("connection to coord: skipping")
-            
-    #     print("Switching to node: ", touched.id)
-    #     print(type(touched))
-        
-    #     if touched.role[0] == "R":
-    #         report(touched)
-    #     elif touched.role[0] == "E":
-    #         print("Reached end node: ", touched.id)
+    # # if coordinator print out everything
+    # if node.role[0] == "C":
+    #     for info in node.payload:
+    #         print(type(info))
+    #         print(info[0], info[1])
 
 def appendToCSV(data):
     with open("readings" + '.csv', 'a', newline='') as f:
@@ -275,7 +320,7 @@ def appendToCSV(data):
 
 #eventually do all of this in PostgresSQL
 print("Creating CSV file to store results")
-headinfo = ["sensorID","frame","inWater","role"]
+headinfo = ["sensorID","inWater","hops-left"]
 with open("readings" + ".csv", 'w', newline='') as csvFile:
     fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     fileWriter.writerow(headinfo)
