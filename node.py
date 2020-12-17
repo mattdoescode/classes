@@ -12,15 +12,12 @@ class Node():
     def __init__(self, name, position, id):
         self.location = position
 
-        #range = radius of circle
         self.range = 125
         self.color = self.RED
         # batteryLife = 100
         # sleepSettings = 0
         self.role = name
         self.id = id
-        # neightbors = 0
-        # connected = False
         self.dectedColor = (255,0,0)
         self.isTounching = []
 

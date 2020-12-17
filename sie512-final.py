@@ -28,6 +28,7 @@ import numpy
 import pygame
 import time
 import math
+import csv
 
 #code to run the nodes
 import Node
@@ -37,7 +38,7 @@ nodes = []
 
 tmp = OpenSimplex(seed=6847765)
 
-CONSTmapSize = 500, 500
+CONSTmapSize = 1000, 1000
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -176,24 +177,39 @@ def checkNodes():
                 nodes[nodeinner + counter].colorChange(green)
                 nodes[nodeinner+counter].isTounching.append(nodes[nodeouter])
 
+# detection does not work 100% of the time....
+# but why?
 def detectWater():
     for node in nodes:
-        if themap[node.location[0]][node.location[1]] <= waterLevel:
+        if themap[node.location[0]][node.location[1]] >= waterLevel:
             node.dectedColor = (0,255,0) 
 
-def sendData(surface):
-    print("sending data....")
-
+#OPTIMIZE HOW THIS WORKS
 def drawTouching(surface):
     for node in nodes:
-        print("evaluating node: ", node.id)
+        #print("evaluating node: ", node.id)
         if node.role[0] == "R":
             for touched in node.sendTouching():
-                print("touched: ", touched.id)
+                #print("touched: ", touched.id)
                 if touched.role[0] == "E":
                     node.drawConnection(touched, surface, (255,211,25))
                 elif touched.role[0] == "C":
                     node.drawConnection(touched, surface, (21,178,211))
+                elif touched.role[0] == "R":
+                    node.drawConnection(touched, surface, (192,100,100))
+
+
+def appendToCSV(data):
+    with open("readings" + '.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(data)
+
+#eventually do all of this in PostgresSQL
+print("Creating CSV file to store results")
+headinfo = ["sensorID","frame","inWater","role"]
+with open("readings" + ".csv", 'w', newline='') as csvFile:
+    fileWriter = csv.writer(csvFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    fileWriter.writerow(headinfo)
 
 print("Controls are as follow: ")
 #add in control instructions
@@ -214,7 +230,7 @@ clock = pygame.time.Clock()
 #location of last saved screenshot
 newScreenCap = ""
 # Starting water level
-waterLevel = 190
+waterLevel = 230
 toggle = True
 connections = True
 
