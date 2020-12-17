@@ -35,7 +35,7 @@ import Node
 #collection of our nodes
 nodes = []
 
-tmp = OpenSimplex(seed=5847)
+tmp = OpenSimplex(seed=6847765)
 
 CONSTmapSize = 400, 400
 #color array of points
@@ -134,8 +134,12 @@ def showRaw():
 def loadImage(name):
     screen.blit(pygame.image.load(name),(0,0))
 
+
+idCount = 1 
 def makeNode(name):
-    nodes.append(Node.Node(name, pygame.mouse.get_pos()))
+    global idCount
+    idCount = idCount + 1
+    nodes.append(Node.Node(name, pygame.mouse.get_pos(), idCount))
 
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
@@ -182,6 +186,8 @@ def checkNodes():
 print("Controls are as follow: ")
 #add in control instructions
 
+
+# main program loop
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -195,9 +201,9 @@ while running:
             if event.key == pygame.K_k:
                 changeWaterLevel(20)
             if event.key == pygame.K_c:
-                makeNode("coordinator")
+                makeNode("Coordinator")
             if event.key == pygame.K_r:
-                makeNode("router")
+                makeNode("Router")
             if event.key == pygame.K_e:
                 makeNode("EndNode")
             if event.key == pygame.K_t:
