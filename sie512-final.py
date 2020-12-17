@@ -38,7 +38,7 @@ nodes = []
 
 tmp = OpenSimplex(seed=6847765)
 
-CONSTmapSize = 500, 500
+CONSTmapSize = 1000, 1000
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -182,7 +182,9 @@ def checkNodes():
 def detectWater():
     for node in nodes:
         if themap[node.location[0]][node.location[1]] >= waterLevel:
-            node.dectedColor = (0,255,0) 
+            node.dectedColor = (0,255,0)
+        else:
+            node.dectedColor = (255,0,0)
 
 #OPTIMIZE HOW THIS WORKS
 def drawTouching(surface):
@@ -388,6 +390,7 @@ while running:
 
     if(not paused):
         if changedTerrain:
+            screenshot()
             computeHeights()
             showRaw()
             newScreenCap = screenshot()

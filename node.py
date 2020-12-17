@@ -18,6 +18,7 @@ class Node():
         # sleepSettings = 0
         self.role = name
         self.id = id
+        #is the node touching water?
         self.dectedColor = (255,0,0)
         self.isTounching = []
 
