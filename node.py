@@ -21,6 +21,7 @@ class Node():
         self.id = id
         # neightbors = 0
         # connected = False
+        self.dectedColor = (255,0,0)
         print("making new:", self.role)
 
     def colorChange(self, color):
@@ -34,7 +35,7 @@ class Node():
         screen.blit(img, (self.location[0]-30, self.location[1]-20))
 
         if toggle:
-            pygame.draw.circle(screen, (0, 0, 0), [self.location[0], self.location[1]], 5, 255)
+            pygame.draw.circle(screen, self.dectedColor, [self.location[0], self.location[1]], 5, 255)
             pygame.draw.circle(screen, self.color, [self.location[0], self.location[1]], self.range, 2)
 
 class Network():

@@ -187,6 +187,11 @@ def checkNodes():
             if(dist <= (nodes[nodeinner + counter].range)):
                 nodes[nodeinner + counter].colorChange(green)
 
+def detectWater():
+    for node in nodes:
+        if themap[node.location[0]][node.location[1]] <= waterLevel:
+            node.dectedColor = (0,255,0) 
+        
 print("Controls are as follow: ")
 #add in control instructions
 
@@ -219,6 +224,8 @@ while running:
             #delete nodes by ID
             if event.key == pygame.K_a:
                 deleteNode()
+            if event.key == pygame.K_j:
+                detectWater()
 
     if(not paused):
         if changedTerrain:
@@ -226,6 +233,7 @@ while running:
             showRaw()
             newScreenCap = screenshot()
             #loadImage(newScreenCap)
+            detectWater()
             changedTerrain = False
         else:
             loadImage(newScreenCap)
