@@ -38,7 +38,7 @@ nodes = []
 
 tmp = OpenSimplex(seed=6847765)
 
-CONSTmapSize = 1000, 1000
+CONSTmapSize = 500, 500
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -169,7 +169,7 @@ def checkNodes():
 
             #calculation of touching needs to optimized
             #some storing of dup. connections
-            #HAD ERROR of first node not having any connections
+            #HAD ERROR? of first node not having any connections
             if(dist <= (nodes[nodeouter].range)):
                 nodes[nodeouter].colorChange(green)
                 nodes[nodeouter].isTounching.append(nodes[nodeinner+counter])
@@ -198,6 +198,75 @@ def drawTouching(surface):
                 elif touched.role[0] == "R":
                     node.drawConnection(touched, surface, (192,100,100))
 
+
+
+#make a list of neighbor nodes
+def callNeighbors():
+    for node in nodes:
+        node.collection = []
+        for inner in nodes:
+            if node.id == inner.id:
+                continue
+            dist = math.sqrt(((node.location[0] - inner.location[0])**2) + ((node.location[1] - inner.location[1])**2))
+            print(dist)
+            if dist <= node.range: 
+                #print("1 neighbor added")
+                node.collection.append(inner)
+
+
+
+def report(node):
+    print("reporting for node:", node.id)
+
+#def report():
+
+
+
+    # print("currently analyzing node: ", node.id)
+    # #print(type(node))
+
+    # if node.id in inspectedID:
+    #     return
+    # else:
+    #     inspectedID.append(node.id)
+
+    # for touched in node.isTounching:
+    #     print(node.id, "is touching: ", touched.id)
+
+    #     print("looking at connection to", touched.id)
+    #     # print(touched.role[0])
+    #     # print(touched.role)
+    #     # print(type(touched.role))
+
+    #     if touched.role[0] == "E":
+    #         print("reached end node - returning")
+            
+    #     elif touched.role[0] == "R":
+    #         print("connection to router")
+    #         report(touched)
+
+    #     elif touched.role[0] == "C":
+    #         print("connection back to Coord - stopping")
+    #         continue
+    # print(len(node.isTounching))
+
+    # for touched in node.isTounching:
+    #     print(node.id, "is touching: ", touched.id)
+    #     print(touched.role)
+    #     if touched.role[0] == "E":
+    #         print("Reached end node: ", touched.id)
+
+    # for touched in node.isTounching:
+    #     if touched.role[0] == "C":
+    #         print("connection to coord: skipping")
+            
+    #     print("Switching to node: ", touched.id)
+    #     print(type(touched))
+        
+    #     if touched.role[0] == "R":
+    #         report(touched)
+    #     elif touched.role[0] == "E":
+    #         print("Reached end node: ", touched.id)
 
 def appendToCSV(data):
     with open("readings" + '.csv', 'a', newline='') as f:
@@ -264,10 +333,13 @@ while running:
                 deleteNode()
             if event.key == pygame.K_j:
                 detectWater()
-            if event.key == pygame.K_b:
-                sendData(screen)
             if event.key == pygame.K_y:
                 connections = not connections
+            if event.key == pygame.K_l:
+                callNeighbors()
+                for node in nodes:
+                    if node.role[0] == "E":
+                        report(node)
 
     if(not paused):
         if changedTerrain:

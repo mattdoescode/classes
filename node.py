@@ -21,6 +21,12 @@ class Node():
         self.dectedColor = (255,0,0)
         self.isTounching = []
 
+        #it's neighbors
+        self.collection = []
+
+        #payload for coordinator
+        self.payload = []
+
         print("making new:", self.role)
     def colorChange(self, color):
         self.color = color
