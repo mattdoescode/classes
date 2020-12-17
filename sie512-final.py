@@ -37,7 +37,7 @@ nodes = []
 
 tmp = OpenSimplex(seed=6847765)
 
-CONSTmapSize = 400, 400
+CONSTmapSize = 500, 500
 #color array of points
 heights = numpy.zeros(CONSTmapSize[0]*CONSTmapSize[1], dtype=(float,3))
 #values of said points before color conversion
@@ -145,6 +145,59 @@ def deleteNode():
     toDelete = len(nodes)
     nodes.pop(toDelete-1)
 
+
+green = (0,255,0)
+red = (255,0,0)
+def checkNodes():
+
+    print("checking radio ranges")
+
+    for node in nodes:
+        node.isTounching = []
+        node.colorChange(red)
+    
+    counter = 0
+    for nodeouter in range(len(nodes[:-1])): 
+        counter = counter + 1
+        for nodeinner in range((len(nodes) - counter)):
+            
+            dist = math.sqrt(((nodes[nodeinner + counter].location[0] - nodes[nodeouter].location[0])**2) + ((nodes[nodeinner + counter].location[1] - nodes[nodeouter].location[1])**2))
+
+            #this SHOULD work with different range nodes
+            #this is untested and not implemented
+
+            #calculation of touching needs to optimized
+            #some storing of dup. connections
+            #HAD ERROR of first node not having any connections
+            if(dist <= (nodes[nodeouter].range)):
+                nodes[nodeouter].colorChange(green)
+                nodes[nodeouter].isTounching.append(nodes[nodeinner+counter])
+            if(dist <= (nodes[nodeinner + counter].range)):
+                nodes[nodeinner + counter].colorChange(green)
+                nodes[nodeinner+counter].isTounching.append(nodes[nodeouter])
+
+def detectWater():
+    for node in nodes:
+        if themap[node.location[0]][node.location[1]] <= waterLevel:
+            node.dectedColor = (0,255,0) 
+
+def sendData(surface):
+    print("sending data....")
+
+def drawTouching(surface):
+    for node in nodes:
+        print("evaluating node: ", node.id)
+        if node.role[0] == "R":
+            for touched in node.sendTouching():
+                print("touched: ", touched.id)
+                if touched.role[0] == "E":
+                    node.drawConnection(touched, surface, (255,211,25))
+                elif touched.role[0] == "C":
+                    node.drawConnection(touched, surface, (21,178,211))
+
+print("Controls are as follow: ")
+#add in control instructions
+
 pygame.init()
 screen = pygame.display.set_mode([CONSTmapSize[0], CONSTmapSize[1]])
 font = pygame.font.SysFont(None, 64)
@@ -161,40 +214,9 @@ clock = pygame.time.Clock()
 #location of last saved screenshot
 newScreenCap = ""
 # Starting water level
-waterLevel = 100
+waterLevel = 190
 toggle = True
-
-
-green = (0,255,0)
-red = (255,0,0)
-def checkNodes():
-
-    print("checking radio ranges")
-
-    for node in nodes:
-        node.colorChange(red)
-    
-    counter = 0
-    for nodeouter in range(len(nodes[:-1])): 
-        counter = counter + 1
-        for nodeinner in range((len(nodes) - counter)):
-            
-            dist = math.sqrt(((nodes[nodeinner + counter].location[0] - nodes[nodeouter].location[0])**2) + ((nodes[nodeinner + counter].location[1] - nodes[nodeouter].location[1])**2))
-
-            #this SHOULD work with different range nodes
-            if(dist <= (nodes[nodeouter].range)):
-                nodes[nodeouter].colorChange(green)
-            if(dist <= (nodes[nodeinner + counter].range)):
-                nodes[nodeinner + counter].colorChange(green)
-
-def detectWater():
-    for node in nodes:
-        if themap[node.location[0]][node.location[1]] <= waterLevel:
-            node.dectedColor = (0,255,0) 
-        
-print("Controls are as follow: ")
-#add in control instructions
-
+connections = True
 
 # main program loop
 while running:
@@ -226,6 +248,10 @@ while running:
                 deleteNode()
             if event.key == pygame.K_j:
                 detectWater()
+            if event.key == pygame.K_b:
+                sendData(screen)
+            if event.key == pygame.K_y:
+                connections = not connections
 
     if(not paused):
         if changedTerrain:
@@ -239,6 +265,10 @@ while running:
             loadImage(newScreenCap)
             for node in nodes:
                 node.show(screen, font, toggle)
+        
+        if connections:
+            drawTouching(screen)
+    
         pygame.display.flip()
 
     clock.tick(30)
