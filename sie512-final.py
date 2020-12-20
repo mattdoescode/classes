@@ -36,7 +36,7 @@ import Node
 #collection of our nodes
 nodes = []
 
-tmp = OpenSimplex(seed=6847765)
+tmp = OpenSimplex(seed=45633)
 
 CONSTmapSize = 1000, 1000
 #color array of points
@@ -228,7 +228,10 @@ def clearPayload():
     for node in nodes:
         node.payload = []
 
+#how many nodes it can visit
 message_strength = 5
+
+# POSSIBLE BUG WHERE SOME messages should be deleted are not 
 def report(node):
     
     print("reporting for node:", node.id)
@@ -265,8 +268,9 @@ def report(node):
             elif connection.role[0] == "C":
                 data = node.payload[0]
                 data[2] = data[2] - 1
-                print("Coord has recieved message", data[0], data[1], data[2])
-                appendToCSV(data)
+                if data[2] >= 0:
+                    print("Coord has recieved message", data[0], data[1], data[2])
+                    appendToCSV(data)
 
     ###
         #### THIS IMPLEMENTATION DOES NOT WORK. IGNORE... FOR NOW....
