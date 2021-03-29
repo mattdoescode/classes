@@ -272,7 +272,6 @@ def report(node):
                     print("Coord has recieved message", data[0], data[1], data[2])
                     appendToCSV(data)
 
-    ###
         #### THIS IMPLEMENTATION DOES NOT WORK. IGNORE... FOR NOW....
     ###
     # # in case of end node to router
